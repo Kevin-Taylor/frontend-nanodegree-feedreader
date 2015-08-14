@@ -24,6 +24,7 @@ $(function() {
         it('are defined', function() {
             expect(allFeeds).toBeDefined();
             expect(allFeeds.length).not.toBe(0);
+            expect(allFeeds instanceof Array).toBeTruthy();
         });
 
 
@@ -31,15 +32,16 @@ $(function() {
          * and that the URL is not empty.
          */
 
-        it('have defined URLs', function(){
+        it('have defined URLs', function() {
             var allFeedsUrl = true;
-            for(i = 0; i < allFeeds.length; i++){
-                if(allFeeds[i].url.length === 0){
+            for(i = 0; i < allFeeds.length; i++) {
+                if(allFeeds[i].url.length === 0) {
                     allFeedsUrl = false;
                     break;
                 }
                 else{
                   expect(allFeeds[i].url).toBeDefined();
+                  expect(allFeeds[i].url).toMatch(/^http(s?)\:\/\//);
                 }
             }
 
@@ -50,15 +52,16 @@ $(function() {
          * and that the name is not empty.
          */
 
-        it('have defined names', function(){
+        it('have defined names', function() {
             var allFeedsNm = true;
-            for(i = 0; i < allFeeds.length; i++){
-                if(allFeeds[i].name.length === 0){
+            for(i = 0; i < allFeeds.length; i++) {
+                if(allFeeds[i].name.length === 0) {
                     allFeedsNm = false;
                     break;
                 }
-                else{
+                else {
                   expect(allFeeds[i].name).toBeDefined();
+                  expect(typeof allFeeds[i].name).toBe('string');
                 }
             }
 
@@ -74,7 +77,7 @@ $(function() {
         /* Test that ensures the menu element is hidden by default.
          */
 
-        it('is hidden by default', function(){
+        it('is hidden by default', function() {
             expect($('body').attr('class')).toBe('menu-hidden');
         });
 
@@ -82,7 +85,7 @@ $(function() {
           * visibility when the menu icon is clicked.
           */
 
-        it('changes visibility when the menu icon is clicked', function(){
+        it('changes visibility when the menu icon is clicked', function() {
 
             $('a.menu-icon-link').trigger('click');
             expect($('body').attr('class')).not.toBe('menu-hidden');
@@ -106,7 +109,7 @@ $(function() {
           loadFeed(0, done);
         });
 
-        it('there is at least a single .entry element within the .feed container', function(){
+        it('there is at least a single .entry element within the .feed container', function() {
             expect($('.entry').length).toBeGreaterThan(0);
         });
 
@@ -124,18 +127,19 @@ $(function() {
         var currEntry, newEntry;
 
         beforeEach(function(done) {
-          loadFeed(0, function(){
-            currEntry = $('.feed').text();  
-          });
-          
-          loadFeed(1, function(){
-            newEntry = $('.feed').text();
-          done();
+          loadFeed(0, function() {
+            currEntry = $('.feed').text();
+
+            loadFeed(1, function() {
+              newEntry = $('.feed').text();
+              done();
+            });
+
           });
 
         });
 
-        it('a new feed is loaded', function(){
+        it('a new feed is loaded', function() {
             expect(newEntry).not.toBe(currEntry);
         });
     });
